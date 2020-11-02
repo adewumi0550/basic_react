@@ -1,25 +1,48 @@
-import React from 'react';
+import React, { Component } from 'react'
 import { Card,Pagination } from 'react-bootstrap';
-const Post = () => (
-    <div>
-        <Card>
-            <Card.Body>
-                <Card.Title>React and Flutter Features</Card.Title>
-                <Card.Text>
-                    Some quick example text to build on the card title and make up the bulk of
-                    the card's content.
-                                </Card.Text>
-                <Card.Link href="#" className="btn btn-primary">Read More</Card.Link>
-                <Card.Link href="#">Comment</Card.Link>
-                <Card.Link href="#">Add Post</Card.Link>
-            </Card.Body>
-        </Card>
+import axios from 'axios';
+export class Post extends Component {
+
+    state = {
+        posts:[]
+      } 
+    
+      componentWillMount(){
+        axios.get('https://jsonplaceholder.typicode.com/posts')
+        .then(res => {
+            this.setState({
+              posts: res.data
+            })
+            // console.log(res.data)
+        })
+        .catch(err=>console.log(err));
+    }
+
+    render() {
+
+        let posts = this.state.posts.map((post) => {
+            return (
+                <Card key={post.id}>
+                <Card.Body>
+            <Card.Title>{post.title}</Card.Title>
+                    <Card.Text>
+                    {post.body}
+                                    </Card.Text>
+                    <Card.Link href="#" className="btn btn-primary">Read More</Card.Link>
+                    <Card.Link href="#">Comment</Card.Link>
+                    <Card.Link href="#">Add Post</Card.Link>
+                </Card.Body>
+            </Card> 
+            )
+        })
+        return (
+            <div>
+                { posts }
         
         <Pagination style={{ marginTop:"30px"}}>
             <Pagination.First />
             <Pagination.Prev />
             <Pagination.Item>{1}</Pagination.Item>
-            {/* <Pagination.Ellipsis /> */}
 
             <Pagination.Item>{2}</Pagination.Item>
             <Pagination.Item>{3}</Pagination.Item>
@@ -33,9 +56,8 @@ const Post = () => (
             <Pagination.Last />
         </Pagination>
     </div>
-);
+        )
+    }
+}
 
-export default Post;
-
-Post.propTypes = {
-};
+export default Post
